@@ -1,0 +1,6 @@
+name: GameFramework
+version: '${version}'
+main: org.mmga.GameFramework.GameFramework
+authors: [ MakeMinecraftGreatAgainTeam ]
+description: A Simple Game Framework OpenSource
+website: https://github.com/MakeMinecraftGreatAgainTeam/GameFramework
