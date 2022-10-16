@@ -11,10 +11,28 @@ repositories {
         name = 'spigotmc-repo'
         url = 'https://hub.spigotmc.org/nexus/content/repositories/snapshots/'
     }
+    maven { url = "https://repo.onarandombox.com/content/groups/public/" }
+    maven {url = 'https://repo.extendedclip.com/content/repositories/placeholderapi/'}
+    maven {url "https://libraries.minecraft.net"}
 }
 
 dependencies {
+    testImplementation 'junit:junit:4.13.1'
     compileOnly 'org.bukkit:bukkit:1.12-R0.1-SNAPSHOT'
+    compileOnly 'com.onarandombox.multiversecore:Multiverse-Core:4.3.1'
+    compileOnly 'me.clip:placeholderapi:2.11.2'
+
+    // https://mvnrepository.com/artifact/mysql/mysql-connector-java
+    implementation group: 'mysql', name: 'mysql-connector-java', version: '8.0.30'
+    // https://mvnrepository.com/artifact/com.alibaba/druid
+    implementation group: 'com.alibaba', name: 'druid', version: '1.2.13'
+    // https://mvnrepository.com/artifact/org.yaml/snakeyaml
+    implementation group: 'org.yaml', name: 'snakeyaml', version: '1.33'
+    implementation group: 'com.mojang', name: 'brigadier', version: '1.0.18'
+    // https://mvnrepository.com/artifact/org.projectlombok/lombok
+    compileOnly group: 'org.projectlombok', name: 'lombok', version: '1.18.24'
+    // https://mvnrepository.com/artifact/org.slf4j/slf4j-api
+    implementation group: 'org.slf4j', name: 'slf4j-api', version: '2.0.3'
 }
 
 def targetJavaVersion = 8
@@ -39,5 +57,13 @@ processResources {
     filteringCharset 'UTF-8'
     filesMatching('plugin.yml') {
         expand props
+    }
+}
+
+tasks.withType(Jar).configureEach {
+    duplicatesStrategy = DuplicatesStrategy.EXCLUDE
+    destinationDir = file("$rootDir/run/plugins")
+    from {
+        configurations.runtimeClasspath.collect { it.isDirectory() ? it : zipTree(it) }
     }
 }
