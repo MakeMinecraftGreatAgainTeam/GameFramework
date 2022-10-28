@@ -5,10 +5,9 @@ import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.PluginDescriptionFile;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
-import org.mmga.gameframework.entities.GameSettings;
-import org.mmga.gameframework.test.TestGameSettings;
+import org.mmga.gameframework.singleton.GetDataSource;
+import org.mmga.gameframework.util.GameframeworkApplication;
 import org.mmga.gameframework.util.jdbc.DataSource;
-import org.mmga.gameframework.util.jdbc.GameframeworkApplication;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -21,21 +20,18 @@ import java.util.Map;
  * @version 1.0.0
  */
 public final class GameFramework extends JavaPlugin {
-    public static DataSource DATA_SOURCE;
     public static final Map<ClassLoader, Plugin> PLUGINS = new HashMap<>();
-    private static final Logger LOGGER = LoggerFactory.getLogger("GameFramework");
+    public static final Logger LOGGER = LoggerFactory.getLogger("GameFramework");
     public void registerApplication(Class<? extends JavaPlugin> clazz){
         GameframeworkApplication.run(clazz);
     }
-    public void registerGameSettings(GameSettings settings){
-        ClassLoader classLoader = settings.getClass().getClassLoader();
-        Plugin plugin = PLUGINS.get(classLoader);
 
-    }
+    private DataSource dataSource;
     @Override
     public void onEnable() {
         // Plugin startup logic
-        DATA_SOURCE = new DataSource(this);
+        this.saveDefaultConfig();
+        dataSource = GetDataSource.initDataSource(this);
         Server server = this.getServer();
         PluginManager pluginManager = server.getPluginManager();
         Plugin[] plugins = pluginManager.getPlugins();
@@ -44,13 +40,12 @@ public final class GameFramework extends JavaPlugin {
         for (Plugin plugin : plugins) {
             PluginDescriptionFile description = plugin.getDescription();
             List<String> depend = description.getDepend();
-            if (depend.contains(name)){
+            if (depend.contains(name)) {
                 ClassLoader classLoader = plugin.getClass().getClassLoader();
                 PLUGINS.put(classLoader, plugin);
             }
         }
         PLUGINS.put(this.getClassLoader(), this);
-        this.registerGameSettings(new TestGameSettings());
         this.registerApplication(this.getClass());
         LOGGER.info("GameFrameworkLoaded!");
     }
@@ -58,5 +53,6 @@ public final class GameFramework extends JavaPlugin {
     @Override
     public void onDisable() {
         // Plugin shutdown logic
+        dataSource.close();
     }
 }

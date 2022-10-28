@@ -1,7 +1,7 @@
 package org.mmga.gameframework.singleton;
 
 import org.mmga.gameframework.GameFramework;
-import org.mmga.gameframework.exception.NotInitSingleton;
+import org.mmga.gameframework.exception.NotInitSingletonException;
 import org.mmga.gameframework.util.jdbc.DataSource;
 
 /**
@@ -27,7 +27,7 @@ public class GetDataSource {
     }
     public static DataSource getDataSource(){
         if (dataSource == null){
-            throw new NotInitSingleton("not init GetDataSource Object");
+            throw new NotInitSingletonException("not init GetDataSource Object");
         }else {
             return dataSource;
         }

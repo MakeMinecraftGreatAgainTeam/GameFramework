@@ -1,0 +1,13 @@
+datasource:
+  # just support mysql now
+  type: mysql
+  # host you want to connect
+  host: localhost
+  # port you want to connect
+  port: 3306
+  # the db you want to use
+  db: minecraft
+  # the login user
+  user: root
+  # the password to login
+  pass: 123456

@@ -4,7 +4,6 @@ plugins {
 
 group = 'org.mmga'
 version = '1.0-SNAPSHOT'
-
 repositories {
     mavenCentral()
     maven {
@@ -31,6 +30,7 @@ dependencies {
     implementation group: 'com.mojang', name: 'brigadier', version: '1.0.18'
     // https://mvnrepository.com/artifact/org.projectlombok/lombok
     compileOnly group: 'org.projectlombok', name: 'lombok', version: '1.18.24'
+    annotationProcessor group: 'org.projectlombok', name: 'lombok', version: '1.18.24'
     // https://mvnrepository.com/artifact/org.slf4j/slf4j-api
     implementation group: 'org.slf4j', name: 'slf4j-api', version: '2.0.3'
 }
@@ -49,6 +49,7 @@ tasks.withType(JavaCompile).configureEach {
     if (targetJavaVersion >= 10 || JavaVersion.current().isJava10Compatible()) {
         options.release = targetJavaVersion
     }
+    options.encoding = "UTF-8"
 }
 
 processResources {
